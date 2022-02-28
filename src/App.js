@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const App = () => {
@@ -15,16 +15,15 @@ const App = () => {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = async () => {
-    try {
-      const result = await axios.post(
-        "http://localhost:5000/api/v1/details/addDetail",
-        values
-      );
-      console.log(result);
-    } catch (error) {
-      setErrorCode(error.response.status);
-    }
+  const handleSubmit = () => {
+    fetch('http://localhost:5000/api/v1/details/addDetail', {
+      method: "POST",
+      body: JSON.stringify(values),
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+    })
+      .then(response => response.json())
+      .then(json => console.log(json))
+      .catch(err => setErrorCode(err.response.status));
   };
 
   return (
@@ -102,11 +101,10 @@ const App = () => {
           <button
             onClick={handleSubmit}
             disabled={isSubmitDisabled}
-            className={`${
-              isSubmitDisabled
-                ? "bg-gray-200 text-gray-900"
-                : "bg-blue-400 text-white"
-            }  rounded-md shadow-lg p-1 py-1 w-full`}
+            className={`${isSubmitDisabled
+              ? "bg-gray-200 text-gray-900"
+              : "bg-blue-400 text-white"
+              }  rounded-md shadow-lg p-1 py-1 w-full`}
           >
             Submit
           </button>
